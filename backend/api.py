@@ -2,7 +2,7 @@
 # coding: utf-8
 
 #  Import Libraries
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import joblib
@@ -11,7 +11,7 @@ import numpy as np
 #  Load Trained Resources
 model = joblib.load("best_model.pkl")
 scaler = joblib.load("scaler.pkl")
-encoders = joblib.load("encoders.pkl")
+encoders = joblib.load("encoders.pkl")  # May not be used, but loaded for compatibility
 
 #  Define Input Schema
 class CropInput(BaseModel):
@@ -35,16 +35,26 @@ app = FastAPI(title="CropVision Yield Prediction API")
 #  Enable CORS for Flutter Integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this to your frontend domain
+    allow_origins=["*"],  # Open to all origins (good for testing)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-#  Prediction Endpoint
+#  Debug Endpoint: Raw Request Inspection
+@app.post("/debug")
+async def debug_raw(request: Request):
+    raw_body = await request.body()
+    print("Raw request body:", raw_body.decode("utf-8"))
+    return {"status": "Received raw body for inspection."}
+
+#  Prediction Endpoint with Logging
 @app.post("/predict")
 def predict_crop_yield(data: CropInput):
-    # Prepare feature array
+    #  Log the parsed input
+    print("Parsed request:", data.dict())
+
+    #  Prepare feature array
     features = np.array([[
         data.soil_moisture,
         data.soil_pH,
@@ -61,8 +71,9 @@ def predict_crop_yield(data: CropInput):
         data.crop_disease_status
     ]])
 
-    # Scale features and predict
+    #  Scale and Predict
     scaled = scaler.transform(features)
     prediction = model.predict(scaled)
 
+    # Return Predicted Yield
     return {"predicted_yield_kg_per_hectare": round(prediction[0], 2)}

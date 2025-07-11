@@ -27,7 +27,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   };
 
   Future<void> predict() async {
-    final url = Uri.parse("https://cropvision.onrender.com/predict"); // Replace with your actual API endpoint
+    final url = Uri.parse("https://cropvision.onrender.com/predict"); //  API endpoint
 
     final data = {
       for (var k in controllers.keys)

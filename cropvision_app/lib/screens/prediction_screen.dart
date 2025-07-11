@@ -27,69 +27,92 @@ class _PredictionScreenState extends State<PredictionScreen> {
   };
 
   Future<void> predict() async {
-    final url = Uri.parse("https://cropvision.onrender.com/predict"); //  API endpoint
+    final url = Uri.parse("https://cropvision.onrender.com/predict"); // Actual endpoint
 
-    final data = {
-      for (var k in controllers.keys)
-        k: double.parse(controllers[k]!.text)
-    };
+    try {
+      //  Safely parse numeric inputs
+      final data = {
+        "soil_moisture": double.tryParse(controllers["soil_moisture"]!.text) ?? 0,
+        "soil_pH": double.tryParse(controllers["soil_pH"]!.text) ?? 0,
+        "temperature": double.tryParse(controllers["temperature"]!.text) ?? 0,
+        "rainfall": double.tryParse(controllers["rainfall"]!.text) ?? 0,
+        "humidity": double.tryParse(controllers["humidity"]!.text) ?? 0,
+        "sunlight_hours": double.tryParse(controllers["sunlight_hours"]!.text) ?? 0,
+        "irrigation_type": controllers["irrigation_type"]!.text,
+        "fertilizer_type": controllers["fertilizer_type"]!.text,
+        "pesticide_usage": double.tryParse(controllers["pesticide_usage"]!.text) ?? 0,
+        "total_days": double.tryParse(controllers["total_days"]!.text) ?? 0,
+        "NDVI_index": double.tryParse(controllers["NDVI_index"]!.text) ?? 0,
+        "crop_type": controllers["crop_type"]!.text,
+        "crop_disease_status": controllers["crop_disease_status"]!.text,
+      };
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(data),
-    );
+      print(" Sending data to API: $data");
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final predictedYield =
-          responseData['predicted_yield_kg_per_hectare'].toStringAsFixed(2);
-
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.green[50],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (ctx) => Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.agriculture, size: 40, color: Colors.green[800]),
-              SizedBox(height: 12),
-              Text(
-                'Predicted Yield',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[900],
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                '$predictedYield kg/hectare',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Smarter Farming Starts Here 🌿',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.green[700],
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
-          ),
-        ),
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
       );
-    } else {
+
+      print(" API Response: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final predictedYield = responseData['predicted_yield_kg_per_hectare'];
+
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.green[50],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (ctx) => Padding(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.agriculture, size: 40, color: Colors.green[800]),
+                SizedBox(height: 12),
+                Text(
+                  'Predicted Yield',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green[900],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '${predictedYield.toStringAsFixed(2)} kg/hectare',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Smarter Farming Starts Here 🌿',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.green[700],
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      } else {
+        print("❌ API returned error: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      print("❌ Network or logic error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${response.body}')),
+        SnackBar(content: Text('An error occurred. Please try again.')),
       );
     }
   }
@@ -103,7 +126,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: TextFormField(
           controller: controller,
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.text,
           decoration: InputDecoration(
             labelText: label.replaceAll("_", " ").toUpperCase(),
             labelStyle: TextStyle(color: Colors.green[700]),

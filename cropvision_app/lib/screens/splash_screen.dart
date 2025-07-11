@@ -10,7 +10,7 @@ class _CropVisionSplashState extends State<CropVisionSplash> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 10), () {
       Navigator.pushReplacementNamed(context, '/about');
     });
   }

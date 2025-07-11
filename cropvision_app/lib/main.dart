@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
-import 'screens/predict_screen.dart';
 import 'screens/about_screen.dart';
+import 'screens/prediction_screen.dart';
 
 void main() => runApp(CropVisionApp());
 
@@ -13,11 +13,10 @@ class CropVisionApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.green),
       initialRoute: '/',
       routes: {
-        '/': (context) => SplashScreen(),
-        '/predict': (context) => PredictScreen(),
+        '/': (context) => CropVisionSplash(),
         '/about': (context) => AboutScreen(),
+        '/predict': (context) => PredictionScreen(),
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-class SplashScreen extends StatefulWidget {
+class CropVisionSplash extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _CropVisionSplashState createState() => _CropVisionSplashState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _CropVisionSplashState extends State<CropVisionSplash> {
   @override
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/predict');
+      Navigator.pushReplacementNamed(context, '/about');
     });
   }
 
@@ -23,17 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.agriculture, size: 100, color: Colors.green[800]),
+            Image.asset('images/cropvison.jpeg', height: 120),
             SizedBox(height: 20),
-            Text(
-              'CropVision',
+            Text('CropVision',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.green[900]),
             ),
             SizedBox(height: 10),
-            Text(
-              'Smart Crop Yield Predictor',
+            Text('Smarter Farming Starts Here',
               style: TextStyle(fontSize: 16, color: Colors.green[700]),
             ),
+            SizedBox(height: 30),
+            CircularProgressIndicator(color: Colors.green[800]),
           ],
         ),
       ),

@@ -4,30 +4,30 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("About CropVision"),
-      ),
+      backgroundColor: Colors.green[50],
       body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ListView(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("🌾 CropVision",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-            SizedBox(height: 16),
-            Text("📱 What This App Does:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            SizedBox(height: 6),
-            Text("• 🌱 At CropVision, we're on a mission to empower agriculture through smart, AI-powered insights.\n\n\n"),
-            Text("• Our app helps farmers and agronomists predict crop yield accurately using real-time data like soil pH, moisture, temperature, and more without guesswork.\n\n\n"),
-            Text("• Powered by machine learning and cloud-based APIs, CropVision delivers fast, reliable yield forecasts to guide better planting, irrigation, and harvest decisions.\n\n\n"),
-            Text("• Built with Flutter for a clean mobile experience."),
-            SizedBox(height: 16),
-            Text("🔗 API Endpoint:", style: TextStyle(fontWeight: FontWeight.bold)),
-            SelectableText("https://cropvision.onrender.com/predict",
-                style: TextStyle(color: Colors.black87)),
-            SizedBox(height: 16),
-            Text(" Developer: [Marie Elyse Uyiringiye]"),
-            Text(" Version: 1.0"),
+            Image.asset('images/cropvison.jpeg', height: 100),
+            SizedBox(height: 20),
+            Text('Smarter Farming Starts Here',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green[900]),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'CropVision uses AI to help farmers make data-driven decisions. By predicting crop yield based on climate and soil inputs, we improve agricultural efficiency and sustainability.',
+              style: TextStyle(fontSize: 16, color: Colors.green[700]),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/predict'),
+              child: Text('Continue to Prediction'),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            ),
           ],
         ),
       ),

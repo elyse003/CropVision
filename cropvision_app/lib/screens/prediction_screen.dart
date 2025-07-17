@@ -27,47 +27,44 @@ class _PredictionScreenState extends State<PredictionScreen> {
   };
 
   Future<void> predict() async {
-    final url = Uri.parse("https://cropvision.onrender.com/predict"); // Actual endpoint
+  final url = Uri.parse("https://cropvision.onrender.com/predict");
 
-    try {
-      //  Safely parse numeric inputs
-      final data = {
-        "soil_moisture": double.tryParse(controllers["soil_moisture"]!.text) ?? 0,
-        "soil_pH": double.tryParse(controllers["soil_pH"]!.text) ?? 0,
-        "temperature": double.tryParse(controllers["temperature"]!.text) ?? 0,
-        "rainfall": double.tryParse(controllers["rainfall"]!.text) ?? 0,
-        "humidity": double.tryParse(controllers["humidity"]!.text) ?? 0,
-        "sunlight_hours": double.tryParse(controllers["sunlight_hours"]!.text) ?? 0,
-        "irrigation_type": controllers["irrigation_type"]!.text,
-        "fertilizer_type": controllers["fertilizer_type"]!.text,
-        "pesticide_usage": double.tryParse(controllers["pesticide_usage"]!.text) ?? 0,
-        "total_days": double.tryParse(controllers["total_days"]!.text) ?? 0,
-        "NDVI_index": double.tryParse(controllers["NDVI_index"]!.text) ?? 0,
-        "crop_type": controllers["crop_type"]!.text,
-        "crop_disease_status": controllers["crop_disease_status"]!.text,
-      };
+  try {
+    // Build data safely
+    final data = {
+      "soil_moisture": double.tryParse(controllers["soil_moisture"]!.text) ?? 0,
+      "soil_pH": double.tryParse(controllers["soil_pH"]!.text) ?? 0,
+      "temperature": double.tryParse(controllers["temperature"]!.text) ?? 0,
+      "rainfall": double.tryParse(controllers["rainfall"]!.text) ?? 0,
+      "humidity": double.tryParse(controllers["humidity"]!.text) ?? 0,
+      "sunlight_hours": double.tryParse(controllers["sunlight_hours"]!.text) ?? 0,
+      "irrigation_type": controllers["irrigation_type"]!.text,
+      "fertilizer_type": controllers["fertilizer_type"]!.text,
+      "pesticide_usage": double.tryParse(controllers["pesticide_usage"]!.text) ?? 0,
+      "total_days": double.tryParse(controllers["total_days"]!.text) ?? 0,
+      "NDVI_index": double.tryParse(controllers["NDVI_index"]!.text) ?? 0,
+      "crop_type": controllers["crop_type"]!.text,
+      "crop_disease_status": controllers["crop_disease_status"]!.text,
+    };
 
-      print(" Sending data to API: $data");
+    print("📤 Sending to API: $data");
 
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(data),
-      );
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(data),
+    );
 
-      print(" API Response: ${response.statusCode}");
+    print("📥 API Response: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final predictedYield = responseData['predicted_yield_kg_per_hectare'];
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      final yieldValue = result['predicted_yield_kg_per_hectare'];
 
+      if (yieldValue != null && yieldValue is num) {
         showModalBottomSheet(
           context: context,
-          backgroundColor: Colors.green[50],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (ctx) => Padding(
+          builder: (_) => Container(
             padding: EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -75,28 +72,16 @@ class _PredictionScreenState extends State<PredictionScreen> {
                 Icon(Icons.agriculture, size: 40, color: Colors.green[800]),
                 SizedBox(height: 12),
                 Text(
-                  'Predicted Yield',
+                  "Predicted Yield",
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[900],
-                  ),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[900]),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '${predictedYield.toStringAsFixed(2)} kg/hectare',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Smarter Farming Starts Here 🌿',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.green[700],
-                  ),
+                  "${yieldValue.toStringAsFixed(2)} kg/hectare",
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
               ],
@@ -104,18 +89,21 @@ class _PredictionScreenState extends State<PredictionScreen> {
           ),
         );
       } else {
-        print("❌ API returned error: ${response.body}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${response.body}')),
-        );
+        throw Exception("Invalid response format");
       }
-    } catch (e) {
-      print("❌ Network or logic error: $e");
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred. Please try again.')),
+        SnackBar(content: Text("API error: ${response.body}")),
       );
     }
+  } catch (e) {
+    print("❌ Error during prediction: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error: $e")),
+    );
   }
+}
+
 
   Widget inputCard(String label, TextEditingController controller) {
     return Card(

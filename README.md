@@ -58,16 +58,16 @@ Uses HTTP POST to fetch predictions from API and displays results
 bash
 Copy
 Edit
-linear_regression_model/
+/
 └── summative/
     ├── linear_regression/
-    │   └── multivariate.ipynb         # Jupyter notebook for model training
+    │   └── model_training.ipynb         # Jupyter notebook for model training
     ├── backend/
     │   ├── api.py              # FastAPI code
     │   ├── requirements.txt
     |   |──best_model.pkl 
     |   ├── scaler.pkl
     |   |──encoders.pkl
-    ├           
+    |          
     └── FlutterApp/                    
         └── lib/...

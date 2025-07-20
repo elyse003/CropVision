@@ -1,31 +1,39 @@
-🌾 CropVision
-Mission:
+**🌾 CropVision**
+
+**Mission**
+
 Empowering African farmers with smart crop yield predictions using real-time environmental and soil data.
 Built with machine learning and mobile-first principles to bring AI to the fields.
 
- Public API Endpoint
+ **Public API Endpoint**
+
+
 API Base URL:
  https://cropvision.onrender.com
 Swagger UI for testing:
  https://cropvision.onrender.com/docs
 
+
 The /predict endpoint accepts 13 input features and returns the predicted crop yield in kg per hectare.
 
- Video Demo (5 minutes)
+ **Video Demo**
  Watch the demo on YouTube
 
 The video includes:
 
-Flutter app usage
+   Flutter app usage
 
-API tested via Swagger UI
+    API tested via Swagger UI
 
-Jupyter notebook training 3 models
+    Jupyter notebook training 3 models
 
-Explanation of performance and deployment
+    Explanation of performance and deployment
 
- How to Run the Mobile App
-1  Requirements
+
+ **How to Run the Mobile App**
+
+*1  Requirements*
+
 Flutter 3.x
 
 Android Studio / VSCode
@@ -33,22 +41,24 @@ Android Studio / VSCode
 Internet access
 
 
-2  Run on Emulator or Real Device
-bash
-Copy
-Edit
-git clone https://github.com/your-username/CropVision.git
-cd CropVision/linear_regression_model/summative/FlutterApp
-flutter pub get
-flutter run
+*2  Run on Emulator or Real Device*
+
+    bash
+    Copy
+    Edit
+    git clone https://github.com/elyse003/CropVision.git
+    cd CropVision/cropvision_app
+    flutter pub get
+    flutter run
 
 
-3  App Features
-Prediction screen: form with 13 inputs
+*3  App Features*
 
-About screen: describes the app’s mission
+    Prediction screen: form with 13 inputs
 
-Splash screen: branding introduction
+    About screen: describes the app’s mission
+
+    Splash screen: branding introduction
 
 Uses HTTP POST to fetch predictions from API and displays results
 
@@ -59,9 +69,10 @@ bash
 Copy
 Edit
 /
-└── summative/
+└── CROPVISION/
     ├── linear_regression/
     │   └── model_training.ipynb         # Jupyter notebook for model training
+        └── African_Smart_Crop_yield_2024.csv # Dataset
     ├── backend/
     │   ├── api.py              # FastAPI code
     │   ├── requirements.txt
@@ -69,5 +80,13 @@ Edit
     |   ├── scaler.pkl
     |   |──encoders.pkl
     |          
-    └── FlutterApp/                    
-        └── lib/...
+    └── cropvision_app/                    
+        └── lib/
+            └── screens/
+                └── splash_screen.dart
+                └── about_screen.dart
+                └── prediction_screen.dart
+            └── main.dart
+
+
+            THANK YOU!!!!   

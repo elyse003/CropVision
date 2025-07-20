@@ -117,5 +117,3 @@ A project by : Marie Elyse UYIRINGIYE
 Thank you for exploring CropVision.
 
 ```
-
-

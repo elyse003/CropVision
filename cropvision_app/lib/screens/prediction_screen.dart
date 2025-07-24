@@ -27,83 +27,107 @@ class _PredictionScreenState extends State<PredictionScreen> {
   };
 
   Future<void> predict() async {
-  final url = Uri.parse("https://cropvision.onrender.com/predict");
+    final url = Uri.parse("https://cropvision.onrender.com/predict");
 
-  try {
-    // Build data safely
-    final data = {
-      "soil_moisture": double.tryParse(controllers["soil_moisture"]!.text) ?? 0,
-      "soil_pH": double.tryParse(controllers["soil_pH"]!.text) ?? 0,
-      "temperature": double.tryParse(controllers["temperature"]!.text) ?? 0,
-      "rainfall": double.tryParse(controllers["rainfall"]!.text) ?? 0,
-      "humidity": double.tryParse(controllers["humidity"]!.text) ?? 0,
-      "sunlight_hours": double.tryParse(controllers["sunlight_hours"]!.text) ?? 0,
-      "irrigation_type": controllers["irrigation_type"]!.text,
-      "fertilizer_type": controllers["fertilizer_type"]!.text,
-      "pesticide_usage": double.tryParse(controllers["pesticide_usage"]!.text) ?? 0,
-      "total_days": double.tryParse(controllers["total_days"]!.text) ?? 0,
-      "NDVI_index": double.tryParse(controllers["NDVI_index"]!.text) ?? 0,
-      "crop_type": controllers["crop_type"]!.text,
-      "crop_disease_status": controllers["crop_disease_status"]!.text,
-    };
+    try {
+      final data = {
+        "soil_moisture": double.tryParse(controllers["soil_moisture"]!.text) ?? 0,
+        "soil_pH": double.tryParse(controllers["soil_pH"]!.text) ?? 0,
+        "temperature": double.tryParse(controllers["temperature"]!.text) ?? 0,
+        "rainfall": double.tryParse(controllers["rainfall"]!.text) ?? 0,
+        "humidity": double.tryParse(controllers["humidity"]!.text) ?? 0,
+        "sunlight_hours": double.tryParse(controllers["sunlight_hours"]!.text) ?? 0,
+        "irrigation_type": int.tryParse(controllers["irrigation_type"]!.text) ?? 0,
+        "fertilizer_type": int.tryParse(controllers["fertilizer_type"]!.text) ?? 0,
+        "pesticide_usage": double.tryParse(controllers["pesticide_usage"]!.text) ?? 0,
+        "total_days": int.tryParse(controllers["total_days"]!.text) ?? 0,
+        "NDVI_index": double.tryParse(controllers["NDVI_index"]!.text) ?? 0,
+        "crop_type": int.tryParse(controllers["crop_type"]!.text) ?? 0,
+        "crop_disease_status": int.tryParse(controllers["crop_disease_status"]!.text) ?? 0,
+      };
 
-    print("📤 Sending to API: $data");
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(data),
+      );
 
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(data),
-    );
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        final yieldValue = result['predicted_yield_kg_per_hectare'];
 
-    print("📥 API Response: ${response.body}");
-
-    if (response.statusCode == 200) {
-      final result = json.decode(response.body);
-      final yieldValue = result['predicted_yield_kg_per_hectare'];
-
-      if (yieldValue != null && yieldValue is num) {
-        showModalBottomSheet(
-          context: context,
-          builder: (_) => Container(
-            padding: EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.agriculture, size: 40, color: Colors.green[800]),
-                SizedBox(height: 12),
-                Text(
-                  "Predicted Yield",
-                  style: TextStyle(
-                      fontSize: 20,
+        if (yieldValue != null && yieldValue is num) {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              backgroundColor: Colors.green[50],
+              title: Column(
+                children: [
+                  Icon(Icons.agriculture, size: 48, color: Colors.green[800]),
+                  SizedBox(height: 12),
+                  Text(
+                    "Predicted Yield",
+                    style: TextStyle(
+                      color: Colors.green[900],
                       fontWeight: FontWeight.bold,
-                      color: Colors.green[900]),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "${yieldValue.toStringAsFixed(2)} kg/hectare",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20),
-              ],
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "${yieldValue.toStringAsFixed(2)} kg/hectare",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.green[800],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close dialog
+                      clearInputs(); // Reset form
+                    },
+                    icon: Icon(Icons.refresh),
+                    label: Text("Clear & Predict Again"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 105, 244, 54),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          throw Exception("Invalid response format");
+        }
       } else {
-        throw Exception("Invalid response format");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("API error: ${response.body}")),
+        );
       }
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("API error: ${response.body}")),
+        SnackBar(content: Text("❌ Error: $e")),
       );
     }
-  } catch (e) {
-    print("❌ Error during prediction: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error: $e")),
-    );
   }
-}
 
+  void clearInputs() {
+    for (var controller in controllers.values) {
+      controller.clear();
+    }
+  }
 
   Widget inputCard(String label, TextEditingController controller) {
     return Card(
@@ -114,7 +138,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: TextFormField(
           controller: controller,
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             labelText: label.replaceAll("_", " ").toUpperCase(),
             labelStyle: TextStyle(color: Colors.green[700]),

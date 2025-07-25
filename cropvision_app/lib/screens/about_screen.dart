@@ -5,28 +5,42 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[50],
-      body: Padding(
-        padding: EdgeInsets.all(20),
+      appBar: AppBar(
+        title: Text('CropVision'),
+        centerTitle: true,
+        backgroundColor: Colors.green[900],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('images/cropvison.jpeg', height: 100),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset('images/cropvison.jpeg', height: 180, fit: BoxFit.cover),
+            ),
             SizedBox(height: 20),
-            Text('Smarter Farming Starts Here',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green[900]),
+            Text(
+              'Smarter Farming Starts Here',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.green[900]),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             Text(
-              'CropVision uses AI to help farmers make data-driven decisions. By predicting crop yield based on climate and soil inputs, we improve agricultural efficiency and sustainability.',
-              style: TextStyle(fontSize: 16, color: Colors.green[700]),
+              'CropVision uses Machine Learning to help farmers make data-driven decisions. By predicting crop yield based on climate and soil inputs, we improve agricultural efficiency and sustainability.',
+              style: TextStyle(fontSize: 18, color: Colors.green[700], height: 1.4),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/predict'),
-              child: Text('Continue to Prediction'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            
+              label: Text('Click to Predict'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: StadiumBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                textStyle: TextStyle(fontSize: 18),
+              ),
             ),
           ],
         ),

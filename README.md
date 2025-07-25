@@ -6,11 +6,53 @@ Empowering African farmers with smart crop yield predictions using real-time env
 Built with machine learning and mobile-first principles to bring AI to the fields.
 
 ---
+## About Dataset
+The dataset simulates real-world smart farming operations powered by IoT sensors and satellite data. It captures environmental and operational variables that affect crop yield across 500 farms located in regions like India, the USA, and Africa.
+
+The dataset, **Smart_Farming_Crop_Yield_2024.csv**, includes over 10,000 samples across different regions, featuring:
+- Climate attributes: `rainfall_mm`, `temperature_C`, `humidity_%`
+- Soil attributes and farming timelines: `sowing_date`, `harvest_date`
+- Geolocation: `latitude`, `longitude`, `region`
+- Target: `yield_kg_per_hectare`
+
+Designed to reflect modern agritech systems, the data is ideal for:
+
+Predictive modeling using ML/AI
+Time-series analysis
+Sensor-based optimization
+Environmental data visualizations
+Crop health analytics
+
+Link to the dataset https://www.kaggle.com/datasets/atharvasoundankar/smart-farming-sensor-data-for-yield-prediction
+
+---
+
+---
+
+##  Key Visualizations for Model Training
+
+The following visualizations were generated to understand relationships between features and guide model design:
+
+### 1. Correlation Heatmap
+
+The heatmap shows how strongly features like rainfall, temperature, and humidity are correlated with crop yield. This helped us prioritize impactful features during model training.
+
+![Correlation Heatmap](linear_regression/correlation heatmap.png)
+
+---
+
+### 2. Yield Distribution Histogram
+
+Understanding the distribution of the target variable (`yield_kg_per_hectare`) helps in selecting appropriate loss functions and transformations.
+
+![Yield Histogram](linear_regression/crop yielddistribution.png)
+
+---
 
 ## Public API Endpoint
 
-- Base URL: [https://cropvision.onrender.com](https://cropvision.onrender.com)  
-- Swagger UI: [https://cropvision.onrender.com/docs](https://cropvision.onrender.com/docs)
+- Base URL: https://cropvision.onrender.com 
+- Swagger UI: https://cropvision.onrender.com/docs
 
 The `/predict` endpoint accepts 13 input features and returns the predicted crop yield in kilograms per hectare.
 

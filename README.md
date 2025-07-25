@@ -37,7 +37,7 @@ The following visualizations were generated to understand relationships between 
 
 The heatmap shows how strongly features like rainfall, temperature, and humidity are correlated with crop yield. This helped us prioritize impactful features during model training.
 
-![Correlation Heatmap](linear_regression/correlation heatmap.png)
+![Correlation Heatmap](linear_regression/correlation%20heatmap.png)
 
 ---
 
@@ -45,7 +45,7 @@ The heatmap shows how strongly features like rainfall, temperature, and humidity
 
 Understanding the distribution of the target variable (`yield_kg_per_hectare`) helps in selecting appropriate loss functions and transformations.
 
-![Yield Histogram](linear_regression/crop yielddistribution.png)
+![Yield Histogram](linear_regression/crop%20yield%20distribution.png)
 
 ---
 

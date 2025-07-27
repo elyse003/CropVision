@@ -116,6 +116,7 @@ CropVision/
 └── cropvision_app/
     ├── lib/
     │   ├── main.dart
+        ├── theme_manager.dart
     │   └── screens/
     │       ├── splash_screen.dart
     │       ├── about_screen.dart

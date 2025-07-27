@@ -59,9 +59,8 @@ The `/predict` endpoint accepts 13 input features and returns the predicted crop
 ---
 
 ## Video Demo
-
-Watch the full 5-minute demonstration video on YouTube:  
-**[Demo Video Link](https://your-youtube-link-here)**
+  
+**[Demo Video Link](https://www.youtube.com/watch?v=rzW5JOKZmUg)**
 
 The video includes:
 - How to use the mobile app

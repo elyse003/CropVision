@@ -126,11 +126,13 @@ CropVision/
         ├── about.jpg
         ├── predict.jpg
         └── result.jpg
+        └── correlation heatmap.jpg
+        └── crop yield distribution.jpg
 ```
 
 ---
 
-## Screenshots
+## Mobile App Screenshots
 
 ### Splash Screen
 
